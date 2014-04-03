@@ -212,11 +212,11 @@ var ScreenManager = {
         break;
 
       case 'unlocking-start':
-        this._setUnlocking();
+        //this._setUnlocking();
         break;
 
       case 'unlocking-stop':
-        this._resetUnlocking();
+        //this._resetUnlocking();
         break;
 
       case 'userproximity':
@@ -436,17 +436,23 @@ var ScreenManager = {
     if (this._screenWakeLocked || typeof(AppWindowManager) !== 'object' ||
         !AppWindowManager.getActiveApp()) {
       this._setIdleTimeout(0);
-    // The screen should be turn off with shorter timeout if
+      // The screen should be turn off with shorter timeout if
     // it was never unlocked.
-    } else if (!this._unlocking) {
-      if (window.lockScreen && window.lockScreen.locked) {
-        this._setIdleTimeout(10, true);
-        window.addEventListener('will-unlock', this);
-        window.addEventListener('lockpanelchange', this);
-      } else {
-        this._setIdleTimeout(this._idleTimeout, false);
-      }
+    } else if (LockScreen.locked) {
+      this._setIdleTimeout(10, true);
+      window.addEventListener('will-unlock', this);
+      window.addEventListener('lockpanelchange', this);
+    } else {
+      this._setIdleTimeout(this._idleTimeout, false);
     }
+    // } else if (!this._unlocking) {
+    //   if (window.lockScreen && window.lockScreen.locked) {
+    //     this._setIdleTimeout(10, true);
+    //     window.addEventListener('will-unlock', this);
+    //     window.addEventListener('lockpanelchange', this);
+    //   } else {
+    //     this._setIdleTimeout(this._idleTimeout, false);
+    //   }
   },
 
   /**
